@@ -307,7 +307,7 @@ function db_get_role_permissions($role_id) {
     $permissions[] = ['permission_id' => $permission_id, 'name' => $name, 'has_permission' => $has_permission];
   }
   $stmt->close();
-  
+
   return $permissions;
 }
 
@@ -672,5 +672,48 @@ function db_delete_replay($item_id) {
   $stmt->bind_param("s", $item_id);
   $stmt->execute();
   $stmt->close();
+}
+
+function db_insert_discord_token($token, $discord_id, $discord_username) {
+  global $mysqli;
+
+  $stmt = $mysqli->prepare("INSERT INTO discord_verification_token (token_id, discord_id, username) VALUES (?, ?, ?)");
+  $stmt->bind_param("sss", $token, $discord_id, $discord_username);
+  $stmt->execute();
+  $stmt->close();
+}
+
+function db_set_discord_id_from_token($badge_no, $token) {
+  global $mysqli;
+
+  $mysqli->begin_transaction();
+  try {
+    $stmt = $mysqli->prepare("SELECT discord_id, username, verified_at FROM discord_verification_token WHERE token_id = ?");
+    $stmt->bind_param("s", $token);
+    $stmt->execute();
+    $stmt->bind_result($discord_id, $discord_username, $verified_at);
+    if (!$stmt->fetch()) {
+      return [ "result"=>"no-token" ];
+    }
+    $stmt->close();
+
+    if ($verified_at) {
+      return [ "result"=>"already-verified", "id"=>$discord_id, "username"=>$discord_username ];
+    }
+
+    db_set_discord_id($badge_no, $discord_id, $discord_username);
+
+    $stmt = $mysqli->prepare("UPDATE discord_verification_token SET verified_at = CURRENT_TIMESTAMP() WHERE token_id = ?");
+    $stmt->bind_param("s", $token);
+    $stmt->execute();
+    $stmt->close();
+
+    $mysqli->commit();
+
+    return [ "result"=>"verified", "id"=>$discord_id, "username"=>$discord_username ];
+  } catch (mysqli_sql_exception $exception) {
+    $mysqli->rollback();
+    throw $exception;
+  }
 }
 ?>

@@ -3,7 +3,8 @@
 define('ROOT_URL', 'https://' . $_SERVER['HTTP_X_FORWARDED_HOST'] ?? _SERVER['HTTP_HOST']);
 define('CON_NAME', 'Glasgow 2024, a Worldcon for Our Futures');
 define('CON_SHORT_NAME', 'Glasgow 2024');
-define('DISCORD_CHANNEL_ID', '1214240728184787013');
+define('DISCORD_INVITE_CHANNEL_ID', '1214240728184787013');
+define('DISCORD_API_CHANNEL_ID', '1248917066807775232');
 define("EMAIL", "info@eastercon2024.co.uk");
 define('TIMEZONE', 'Europe/London');
 
@@ -18,6 +19,7 @@ define('RCE_TICKET_ID', $config_file['rce']['ticket_id']);
 define('DISCORD_BOT_TOKEN', $config_file['discord']['bot_token']);
 define('DISCORD_CLIENT_ID', $config_file['discord']['client_id']);
 define('DISCORD_CLIENT_SECRET', $config_file['discord']['client_secret']);
+define('API_KEYS', $config_file['api_keys']);
 
 define('CLYDE_CLIENT_ID', $config_file['clyde']['client_id']);
 define('CLYDE_CLIENT_SECRET', $config_file['clyde']['client_secret']);
