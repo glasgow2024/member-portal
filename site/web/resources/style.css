@@ -142,12 +142,15 @@ main {
   display: grid;
   column-gap: 20px;
   row-gap: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  grid-auto-rows: 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(275px, 1fr));
 }
 
 .card {
-  display: block;
+  display: grid;
+  grid-row: span 4;
+  grid-template-rows: subgrid [image-start][image-end title-start] [title-end subtitle-start] [subtitle-end description-start] [description-end];
+  grid-template-columns: subgrid;
+  row-gap: 0;
   padding: 0 20px;
   text-decoration: none;
   color: rgb(34, 34, 34);
@@ -164,12 +167,14 @@ main {
 }
 
 .card .hero {
+  grid-area: image;
   content: ' ';
   margin: 0 -20px 20px -20px;
   aspect-ratio: 1.5 / 1;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   background-size: cover;
+  background-image: url('/resources/unknown.png');
 }
 
 .card.time .hero {
@@ -179,6 +184,10 @@ main {
   justify-content: center;
   align-items: center;
   background-color: #EEE;
+}
+
+.card.time .hero {
+  background-image: none;
 }
 
 .card.readme .hero {
@@ -201,10 +210,6 @@ main {
   background-image: url('/resources/website.png');
 }
 
-.card.discord-mod .hero {
-  background-image: url('/resources/discord-mod.png');
-}
-
 .card.vote .hero {
   background-image: url('/resources/vote.jpg');
 }
@@ -213,27 +218,21 @@ main {
   background-image: url('/resources/partguide.png');
 }
 
-.card.souvenir .hero {
-  background-image: url('/resources/souvenir.png');
-}
-
-.card.newsletter .hero {
-  background-image: url('/resources/newsletter.png');
-}
-
-.card.donate .hero {
-  background-image: url('/resources/donate.jpg');
-}
-
 .card h3 {
+  grid-area: title;
   font-weight: bold;
   margin-bottom: 5px;
   font-size: 24px;
 }
 
 .card h4 {
+  grid-area: subtitle;
   margin-bottom: 20px;
   font-size: 18px;
+}
+
+.card p {
+  grid-area: description;
 }
 
 .other {
