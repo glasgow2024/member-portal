@@ -15,9 +15,16 @@ render_header();
   <p>We are using a platform called <a href="https://discord.com/" target="_blank">Discord</a> to host our online chat, both text and audio/video. There are apps for desktop and mobile, or you can use it in your browser.</p>
 <?php
   if (empty($usernames)) {
+    if (is_anonymous()) {
+?>
+      <p><a class="button" href="<?php echo make_login_link(); ?>">Log in to chat</a></p>
+<?php
+    } else {
+
 ?>
   <p><a class="button" target="_blank" href="https://discord.com/oauth2/authorize?client_id=<?php echo DISCORD_CLIENT_ID; ?>&response_type=code&redirect_uri=<?php echo urlencode(ROOT_URL) ?>%2Fchat_callback&scope=identify">Join the Discord server</a></p>
 <?php
+    }
   } else {
     if (count($usernames) === 1) {
 ?>

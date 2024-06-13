@@ -10,8 +10,14 @@ function check_permission($permission) {
 }
 
 if (!is_logged_in()) {
-  header('Location: /login?redirect=' . urlencode($_SERVER['REQUEST_URI']));
-  exit;
+  if (is_anonymous()) {
+    $_SESSION['username'] = 'Anonymous';
+    $_SESSION['permissions'] = db_get_default_permissions();
+    return;
+  } else {
+    header('Location: ' . make_login_link());
+    exit;
+  }
 }
 
 $_SESSION['username'] = get_current_user_name();
